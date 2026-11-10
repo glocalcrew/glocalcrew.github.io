@@ -685,7 +685,7 @@ const PLACES=[
 ];
 const T={
  mo:["More","더 보기"],le:["Less","접기"],
- mapNote:["Ranked places are suggestions based on incomplete menu/category data, not menu-verified. Tap a pin to view options.","지도 핀은 업종과 등록된 식단 정보에 따른 추천 순위입니다. 섭취 가능 여부가 확정된 것은 아닙니다."],
+ mapNote:["The dashed circle is your search radius. Big pins are the top of the list; small dots are other places inside the circle. Nothing here confirms what you can eat.","점선 원이 검색 반경이에요. 큰 핀은 목록 위쪽 식당, 작은 점은 반경 안의 다른 식당이에요. 먹을 수 있는지 확정된 건 아니에요."],
  mapOff:["The map couldn't load here. The list below still works.","여기서는 지도를 불러오지 못했어요. 아래 목록은 그대로 쓸 수 있어요."],
  hostelPin:["Hostel","호스텔"],
  shift:["Times may shift on the day. Follow our staff's updates.","실제 진행 시간은 바뀔 수 있어요. 운영진 안내를 따라 주세요."],
@@ -694,7 +694,7 @@ const T={
  notice:["<b>Meeting place confirmed.</b> Fri Nov 13, 14:00 at Seoul Youth University (서울청년대학) in Seongdong Ansim Sangga (20 Seongsuil-ro 12-gil). We move to Hi Seoul Youth Hostel (200 Yeongsin-ro) at 17:00.","<b>집결 장소 안내</b> 11월 13일(금) 14:00 서울청년대학(성동안심상가, 성수일로12길 20)에 모입니다. 17:00에는 하이서울유스호스텔(영신로 200)로 이동합니다."],
  station:["Nearest station: Yeongdeungpo Market (Line 5), Exit 1 · about 10 min walk","가까운 역: 영등포시장역(5호선) 1번 출구 · 도보 약 10분"],
  address:["Hi Seoul Youth Hostel · 200 Yeongsin-ro, Yeongdeungpo-gu, Seoul","하이서울유스호스텔 · 서울특별시 영등포구 영신로 200"],
- lateT:["Running late or lost?","늦거나 길을 잃었나요?"],kakao:["Message us on KakaoTalk (open chat)","카카오톡 오픈채팅으로 연락하기"],lateD:["Call or text us. We keep our phones on during the event.","전화나 문자 주세요. 행사 중에는 휴대폰을 계속 확인해요."],call:["Call","전화하기"],text:["Text","문자 보내기"],qT:["Other questions (not urgent)","급하지 않은 문의"],
+ lateT:["Running late or lost?","늦거나 길을 잃었나요?"],kakao:["💬 Open the crew KakaoTalk chat","💬 글로컬 크루 단톡방 열기"],lateD:["Call or text us. We keep our phones on during the event.","전화나 문자 주세요. 행사 중에는 휴대폰을 계속 확인해요."],call:["Call","전화하기"],text:["Text","문자 보내기"],qT:["Other questions (not urgent)","급하지 않은 문의"],
  ev:["Glocal Crew 2026 · Kickoff","글로컬 크루 2026 · 발대식"],
  switchTo:["한국어","English"],
  ended:["Thanks for coming","참여해 주셔서 고마워요"],endedSub:["The Glocal Crew kickoff has ended","발대식이 끝났어요"],
@@ -836,7 +836,7 @@ function ticketActions(n){
  <div class="pass-nav-address">${esc(tx(destination.addr))}</div>
  <div class="pass-nav-hint">${L()?"사용하는 지도 앱을 선택하세요":"Choose the map app you use"}</div>
  ${dirLinks(destination,destination.dname)}</div>
- <div class="pass-actions"><a class="pass-btn pass-btn-secondary" href="tel:01064688558"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.15 1.01.4 2 .74 2.95a2 2 0 0 1-.45 2.11L8.1 10a16 16 0 0 0 5.9 5.9l1.25-1.29a2 2 0 0 1 2.1-.45c.95.34 1.94.59 2.95.74a2 2 0 0 1 1.7 2Z"/></svg>${L()?"길을 잃었나요? 운영진 전화":"Lost? Call the organizers"}</a></div>`;
+ <div class="pass-actions">${KAKAO_URL?`<a class="pass-btn" target="_blank" rel="noopener" href="${KAKAO_URL}">💬 ${L()?"단톡방에 물어보기":"Ask in the crew chat"}</a>`:""}<a class="pass-btn pass-btn-secondary" href="tel:01064688558"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.15 1.01.4 2 .74 2.95a2 2 0 0 1-.45 2.11L8.1 10a16 16 0 0 0 5.9 5.9l1.25-1.29a2 2 0 0 1 2.1-.45c.95.34 1.94.59 2.95.74a2 2 0 0 1 1.7 2Z"/></svg>${L()?"길을 잃었나요? 운영진 전화":"Lost? Call the organizers"}</a></div>`;
 }
 function venueGuide(){
  const cards=["seongsu","hostel"].map((k,i)=>{const p=BASES[k];return `<div class="venue-guide-item"><div class="venue-guide-kicker">${i===0?(L()?"01 · 11월 13일 14:00 집결":"01 · FRI NOV 13 · 14:00 MEETING"):(L()?"02 · 17:00 이동 목적지 / 숙소":"02 · 17:00 TRANSFER / HOSTEL")}</div>
@@ -920,7 +920,7 @@ const ot=k=>OT[k][S.lang==="ko"?1:0];
 const BIZ=[["썬파닭치킨 영등포점","치킨",37.525548,126.903717,"국회대로44길 2-1","1"],["미친피자 영등포점","피자",37.526143,126.90341,"국회대로 623","1"],["파리바게뜨유스호스텔점","빵/도넛",37.52516,126.903299,"영신로 200","1"],["7번가피자 영등포점","피자",37.526232,126.903173,"영신로 210","1"],["통큰제육","돼지고기 구이/찜",37.526224,126.903342,"국회대로 621-1",""],["포항물회","횟집",37.526224,126.903342,"국회대로 621-1",""],["곱창의전설","곱창 전골/구이",37.526224,126.903342,"국회대로 621-1",""],["구백냥곱창","곱창 전골/구이",37.526224,126.903342,"국회대로 621-1",""],["연탄할매","백반/한정식",37.526224,126.903342,"국회대로 621-1",""],["외길곱창","곱창 전골/구이",37.526224,126.903342,"국회대로 621-1",""],["도래곱창","곱창 전골/구이",37.526224,126.903342,"국회대로 621-1",""],["김치도가영등포knk점","백반/한정식",37.526035,126.903886,"국회대로 627-1","1"]]; // 디자인 검토용으로 408곳 중 12곳만 남김;
 const BIZ2=[["고기다","돼지고기 구이/찜",37.548172,127.053243,"성수일로12길 20","1"],["엘닷","일식 회/초밥",37.548172,127.053243,"성수일로12길 20","1"],["또와","백반/한정식",37.548172,127.053243,"성수일로12길 20","1"],["라보엠","빵/도넛",37.548172,127.053243,"성수일로12길 20",""],["예셰숄","카페",37.54838,127.05313,"성수일로12길 18-1","1"],["르모멍","빵/도넛",37.548425,127.053435,"성수일로12길 19-1","1"],["성수식당","백반/한정식",37.548425,127.053435,"성수일로12길 19-1",""],["카페메이","카페",37.548425,127.053435,"성수일로12길 19-1","1"],["어퍼룸","카페",37.54838,127.053583,"성수일로12길 21","1"],["뭄알로이","경양식",37.548569,127.053198,"성수일로12길 17","1"],["전자방","중국집",37.548316,127.053718,"성수일로12길 23","1"],["리틀포레스트","피자",37.548316,127.053718,"성수일로12길 23","2"]]; // 디자인 검토용으로 675곳 중 12곳만 남김;
 const BASES={seongsu:{lat:37.5481744,lng:127.0532505,en:"Seoul Youth University",ko:"서울청년대학",pin:["Meeting point","집결지"],seg:["Seongsu · Seoul Youth Univ.","성수 · 서울청년대학"],kw:"성수역",dname:"성동안심상가",addr:["Seoul Youth University · Seongdong Ansim Sangga, 20 Seongsuil-ro 12-gil, Seongdong-gu, Seoul (Seongsu-dong 2-ga, 284-22)","서울청년대학 · 성동안심상가, 서울특별시 성동구 성수일로12길 20 (성수동2가 284-22)"],biz:BIZ2},
- hostel:{lat:37.5256808,lng:126.9031729,en:"Hi Seoul Youth Hostel",ko:"하이서울유스호스텔",pin:["Hostel","숙소"],seg:["Yeongdeungpo · Hostel","영등포 · 숙소"],kw:"영등포",dname:"하이서울유스호스텔",addr:["Hi Seoul Youth Hostel · 200 Yeongsin-ro, Yeongdeungpo-gu, Seoul","하이서울유스호스텔 · 서울특별시 영등포구 영신로 200"],biz:BIZ}};
+ hostel:{lat:37.5256808,lng:126.9031729,en:"Hi Seoul Youth Hostel",ko:"하이서울유스호스텔",pin:["Hostel","숙소"],seg:["Yeongdeungpo · Hostel","영등포 · 숙소"],kw:"영등포시장역",dname:"하이서울유스호스텔",addr:["Hi Seoul Youth Hostel · 200 Yeongsin-ro, Yeongdeungpo-gu, Seoul","하이서울유스호스텔 · 서울특별시 영등포구 영신로 200"],biz:BIZ}};
 const B=()=>BASES[S.base]||BASES.hostel;
 // 공공 상가 데이터(2026.9) · 두 장소 반경 1.5km · 필요할 때 한 번만 불러옴
 const DATA={seongsu:{url:"data/seongsu.json",status:"idle"},hostel:{url:"data/hostel.json",status:"idle"}};
@@ -1100,11 +1100,13 @@ async function loadOSM(){const key=searchKey();if(OSM.status==="loading"&&OSM.lo
 function nearMeApps(){const p=S.loc;if(!p)return"";const halal=S.presets.has("Halal"),veg=S.presets.has("Vegan")||S.presets.has("Vegetarian");
  const ko=encodeURIComponent(halal?"할랄 식당":veg?"채식 식당":"음식점"),en=encodeURIComponent(halal?"halal restaurant":veg?"vegetarian restaurant":"restaurant"),m=T.maps[L()];
  return `<div class="maps"><a class="mapbtn naver" href="kakaomap://search?q=${ko}&p=${p.lat},${p.lng}" data-fallback="https://map.kakao.com/link/search/${ko}"><img class="logo" src="${LOGO.kakao}" alt=""><span>${m[0]}</span></a><a class="mapbtn naver" href="nmap://search?query=${ko}&appname=glocalcrew" data-fallback="https://map.naver.com/p/search/${ko}"><img class="logo" src="${LOGO.naver}" alt=""><span>${m[1]}</span></a><a class="mapbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${en}/@${p.lat},${p.lng},16z"><img class="logo" src="${LOGO.google}" alt=""><span>${m[2]}</span></a></div>`}
-function searchRow(){const halal=S.presets.has("Halal"),veg=S.presets.has("Vegan")||S.presets.has("Vegetarian");
- const base=centerPoint(),baseWord=S.searchMode==="me"&&S.loc?"내 주변":B().ko;
- const ko=encodeURIComponent(baseWord+" "+(halal?"할랄 식당":veg?"채식 식당":"음식점"));
+function searchRow(){
+ if(S.searchMode==="me"&&S.loc)return `<section class="info rest-search"><h2>${rt("search")}</h2>${nearMeApps()}</section>`;
+ const halal=S.presets.has("Halal"),veg=S.presets.has("Vegan")||S.presets.has("Vegetarian"),base=B();
+ // 지도 앱이 아는 이름(가까운 역)으로 검색해요. 구글은 좌표로 찾아요.
+ const ko=encodeURIComponent(base.kw+" "+(halal?"할랄 식당":veg?"채식 식당":"맛집"));
  const en=encodeURIComponent(halal?"halal restaurant":veg?"vegetarian restaurant":"restaurant"),m=T.maps[L()];
- return `<section class="info rest-search"><h2>${rt("search")}</h2><div class="maps"><a class="mapbtn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${ko}">${m[0]}</a><a class="mapbtn" target="_blank" rel="noopener" href="https://map.naver.com/p/search/${ko}">${m[1]}</a><a class="mapbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${en}/@${base.lat},${base.lng},16z">${m[2]}</a></div></section>`;
+ return `<section class="info rest-search"><h2>${rt("search")}</h2><div class="maps"><a class="mapbtn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${ko}"><img class="logo" src="${LOGO.kakao}" alt=""><span>${m[0]}</span></a><a class="mapbtn" target="_blank" rel="noopener" href="https://map.naver.com/p/search/${ko}"><img class="logo" src="${LOGO.naver}" alt=""><span>${m[1]}</span></a><a class="mapbtn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${en}/@${base.lat},${base.lng},16z"><img class="logo" src="${LOGO.google}" alt=""><span>${m[2]}</span></a></div></section>`;
 }
 function explorerControls(){const dietLabel=S.diet?(S.presets.size?[...S.presets].map(pname).join(", "):S.avoid.size?[...S.avoid].map(ing).join(", "):t("none")):rt("choose");
  return `<div class="explore-tools">
@@ -1146,6 +1148,19 @@ function pickBiz(key){S.bizPick=S.bizPick===key?null:key;const wrap=document.get
 function updateRankedMapPins(){if(!MAP.m||!window.L)return;const LF=window.L;
  for(const x of Object.values(MAP.biz||{})){try{x.remove()}catch(e){}}
  MAP.biz={};
+ if(MAP.dots){try{MAP.dots.remove()}catch(e){}}if(MAP.ring){try{MAP.ring.remove()}catch(e){}}
+ const c=centerPoint();
+ // 검색 반경을 점선 원으로 표시
+ MAP.ring=LF.circle([c.lat,c.lng],{radius:S.radius,color:"#E8763E",weight:2,opacity:.85,fill:true,fillOpacity:.05,dashArray:"6 6",interactive:false}).addTo(MAP.m);
+ if(MAP.cvMap!==MAP.m){MAP.cv=LF.canvas({padding:.5});MAP.cvMap=MAP.m}
+ const shown=new Set(BIZSHOW.filter(Boolean).map(x=>x.key));
+ // 반경 안 나머지 식당은 작은 점으로 (캔버스로 그려 가볍게)
+ MAP.dots=LF.layerGroup();
+ rankedRestaurants().forEach(x=>{if(shown.has(x.key))return;const col=x.j==="no"?"#9AA4B5":x.j==="check"?"#3B82F6":"#2E9A73";
+  const d=LF.circleMarker([x.lat,x.lng],{renderer:MAP.cv,radius:4,weight:1,color:"#FFFFFF",fillColor:col,fillOpacity:.85});
+  d.bindTooltip(esc(x.ko),{direction:"top",className:"biz-tip"});d.on("click",()=>pickBiz(x.key));MAP.dots.addLayer(d)});
+ MAP.dots.addTo(MAP.m);
+ const fk=searchKey();if(!S.bizPick&&(MAP.fitMap!==MAP.m||MAP.fitKey!==fk)){MAP.fitMap=MAP.m;MAP.fitKey=fk;MAP.m.fitBounds(MAP.ring.getBounds(),{padding:[8,8]})}
  BIZSHOW.forEach(x=>{if(!x)return;const sel=S.bizPick===x.key,coord=[x.lat,x.lng];
   const icon=bizIcon(x,sel),mk=LF.marker(coord,{icon,title:x.ko,zIndexOffset:sel?900:0}).addTo(MAP.m);
   mk.bindTooltip(esc(x.ko),{direction:"top",offset:[0,-12],className:"biz-tip"});
