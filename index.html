@@ -600,6 +600,15 @@ body{font-family:"Manrope","Noto Sans KR",-apple-system,"Apple SD Gothic Neo",sa
 .retry-osm{min-height:37px;padding:8px 11px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:12px}
 @media(max-width:360px){.operator-name{font-size:17px}.day-operator{padding:12px}.operator-day{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.team-summary-chevron{transition:none}}
+
+.jump-route{display:block;width:100%;margin:10px 0 4px;padding:11px 14px;border-radius:14px;border:1.5px dashed var(--line);background:transparent;color:var(--jade);font-weight:800;font-size:14px;text-align:center;cursor:pointer}
+#route-head{scroll-margin-top:84px}
+
+.menu.m-check,.menu.m-no{border-left:4px solid var(--check);background:var(--check-soft);border-radius:12px;padding:12px 12px 12px 14px;margin:10px 0;border-bottom:0}
+.menu.m-no{border-left-color:var(--no);background:var(--no-soft)}
+.menu.m-check .ing{color:var(--check);font-weight:700}
+.menu.m-no .ing{color:var(--no);font-weight:700}
+.m-flag{margin-left:4px;vertical-align:middle;font-size:11px}
 </style>
 
 </head>
@@ -627,7 +636,7 @@ const DAY1=[
  {s:"14:10",e:"15:00",w:["Icebreaking, OT and crew intro","아이스브레이킹 · OT · 글로컬 크루 소개"],p:["Seoul Youth University (서울청년대학) · Seongdong Ansim Sangga","서울청년대학 · 성동안심상가"]},
  {s:"15:00",e:"17:00",w:["Group activity: mileage rally","그룹 활동: 마일리지 랠리"],p:["Seoul Youth University (서울청년대학) · Seongdong Ansim Sangga","서울청년대학 · 성동안심상가"],note:["Four teams (5/5/4/4) plan a one-day trip and present it. Check your Nov 13 group below.","4개 조(5·5·4·4명)로 한국의 한 지역을 주제로 당일 여행 코스를 기획하고 발표합니다. 아래 13일 조 편성을 확인하세요."],sub:[{s:"15:00",e:"16:00",w:["Prepare the rally","마일리지 랠리 준비"]},{s:"16:00",e:"16:50",w:["Team presentations","발표 대회"]},{s:"16:50",e:"17:00",w:["Wrap-up · winners announced","마무리 · 우승 팀 발표"]}]},
  {s:"17:00",e:"18:00",w:["Move to the hostel","호스텔로 이동"],p:["Public transport to Hi Seoul Youth Hostel (200 Yeongsin-ro) · transport fee supported","대중교통으로 하이서울유스호스텔(영등포구 영신로 200)까지 · 교통비 지원"],dir:true,video:"https://www.youtube.com/shorts/iHPwXT1ixKQ",arrive:["Look for the green speech-bubble sign on the roof. The entrance is the bright glass lobby on the ground floor.","지붕의 초록색 말풍선 간판을 찾으세요. 입구는 1층의 밝은 유리 로비예요."]},
- {s:"18:00",e:"19:00",w:["Group dinner · provided by HelloWorld Korea","단체 저녁 · 헬로우월드코리아 제공"],p:["HiSeoul Youth Hostel · dining hall","하이서울유스호스텔 · 식당"],meal:"dinner"},
+ {s:"18:00",e:"19:00",w:["Group dinner (HelloWorld Korea)","단체 저녁 (헬로우월드코리아)"],p:["HiSeoul Youth Hostel · dining hall","하이서울유스호스텔 · 식당"],meal:"dinner"},
  {s:"19:00",e:"19:30",w:["Check-in and rest","체크인 · 휴식"],p:["HiSeoul Youth Hostel · room assignment","하이서울유스호스텔 · 방 배치"]},
  {s:"19:30",e:"20:30",w:["Recreation: teamwork games","레크리에이션: 팀워크 게임"],p:["HiSeoul Youth Hostel · seminar room","하이서울유스호스텔 · 세미나실"]},
  {s:"20:30",e:"21:30",w:["Welcome party","웰컴 파티"],p:["HiSeoul Youth Hostel · lounge / seminar room","하이서울유스호스텔 · 라운지/세미나실"],note:["Crew pledge, official group photo, free time · late-night ramyeon","크루 선서 · 공식 단체 사진 · 자유 시간 · 야식 라면"],meal:"snack"}
@@ -831,10 +840,13 @@ function ticketActions(n){
    `;
  }
  // 장소와 주소는 운영진 제공 정보를 기준으로 안내합니다. 실제 항공편 정보가 아닙니다.
- const destination=CUR===0&&(!n.day||n.m<mins("17:00"))?BASES.seongsu:BASES.hostel;
- return `<div class="pass-nav"><div class="pass-nav-title">${L()?"지금 찾아갈 장소":"DIRECTIONS TO"} · <strong>${esc(L()?destination.ko:destination.en)}</strong></div>
+ const mvIt=DAY1.find(x=>x.dir);const switchAt=mvIt?mins(mvIt.s):mins("17:00"); // 호스텔 이동 일정이 시작되면 목적지가 바뀌어요(운영진이 시간을 바꾸면 따라감)
+ const destination=CUR===0&&(!n.day||n.m<switchAt)?BASES.seongsu:BASES.hostel;
+ // 도착해서 활동 중이면 "지금 있는 장소", 이동 전·이동 중이면 "지금 찾아갈 장소"
+ const here=CUR===0&&n.day&&((n.m>=mins(DAY1[0].s)&&n.m<switchAt)||(mvIt&&n.m>=mins(mvIt.e)));
+ return `<div class="pass-nav"><div class="pass-nav-title">${here?(L()?"지금 있는 장소":"YOU ARE AT"):(L()?"지금 찾아갈 장소":"DIRECTIONS TO")} · <strong>${esc(L()?destination.ko:destination.en)}</strong></div>
  <div class="pass-nav-address">${esc(tx(destination.addr))}</div>
- <div class="pass-nav-hint">${L()?"사용하는 지도 앱을 선택하세요":"Choose the map app you use"}</div>
+ <div class="pass-nav-hint">${here?(L()?"길을 잃었다면 지도 앱으로 찾아오세요":"Lost? Find your way back in a map app"):(L()?"사용하는 지도 앱을 선택하세요":"Choose the map app you use")}</div>
  ${dirLinks(destination,destination.dname)}</div>
  <div class="pass-actions">${KAKAO_URL?`<a class="pass-btn" target="_blank" rel="noopener" href="${KAKAO_URL}">💬 ${L()?"단톡방에 물어보기":"Ask in the crew chat"}</a>`:""}<a class="pass-btn pass-btn-secondary" href="tel:01064688558"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.15 1.01.4 2 .74 2.95a2 2 0 0 1-.45 2.11L8.1 10a16 16 0 0 0 5.9 5.9l1.25-1.29a2 2 0 0 1 2.1-.45c.95.34 1.94.59 2.95.74a2 2 0 0 1 1.7 2Z"/></svg>${L()?"길을 잃었나요? 운영진 전화":"Lost? Call the organizers"}</a></div>`;
 }
@@ -887,7 +899,7 @@ function today(){const n=nowInfo();
   ${x.meal?`<button class="act" data-goto="food" data-meal="${x.meal}">${x.meal==="dinner"?t("seeDinner"):t("seeSnack")}</button>`:""}</div></li>`}).join("");
  const late=(n.day&&CUR===0&&n.m>=mins(DAY1[DAY1.length-1].e)-30)||(n.day&&CUR===1)||n.before===false;
  const survey=late&&SURVEY_URL?`<div class="contact" style="margin:0 0 16px"><div style="font-weight:800">${t("surveyT")}</div><div class="small muted">${t("surveyD")}</div><button class="btn" id="survey" style="margin-top:8px">${t("surveyBtn")}</button></div>`:"";
- return `<div class="today-heading"><div><p class="eyebrow">${L()?"GLOCAL CREW · 여정 안내":"GLOCAL CREW · CITY JOURNEY"}</p><h1>${L()?`${Number(DAYS[CUR].d.slice(5,7))}월 ${Number(DAYS[CUR].d.slice(8,10))}일 일정`:`${CUR===0?"Friday":"Saturday"}, Nov ${Number(DAYS[CUR].d.slice(8,10))}`}</h1></div><span class="day-ticket-label">01—02</span></div>${daySwitcher()}${operatorBanner()}${survey}${(NOTICE_ON===null?CUR===0:NOTICE_ON)?`<div class="notice">${t("notice")}</div>`:""}${statusCard(n)}${nextPreview(n)}${venueGuide()}<div class="section-head"><div><span class="route-kicker">${L()?"ROUTE / CHECKPOINTS":"ROUTE / CHECKPOINTS"}</span><h2>${L()?"여정 경로":"Your journey route"}</h2></div><span>${SCHEDULE.length} ${L()?"개 경유지":"stops"}</span></div><ol class="tl">${rows}</ol>${CUR===0?teamSection():yggNotice()}${teamOrYggContact()}`}
+ return `<div class="today-heading"><div><p class="eyebrow">${L()?"GLOCAL CREW · 여정 안내":"GLOCAL CREW · CITY JOURNEY"}</p><h1>${L()?`${Number(DAYS[CUR].d.slice(5,7))}월 ${Number(DAYS[CUR].d.slice(8,10))}일 일정`:`${CUR===0?"Friday":"Saturday"}, Nov ${Number(DAYS[CUR].d.slice(8,10))}`}</h1></div><span class="day-ticket-label">01—02</span></div>${daySwitcher()}<button type="button" class="jump-route" data-jump="route-head">${L()?"전체 일정 바로 보기 ↓":"Jump to full schedule ↓"}</button>${operatorBanner()}${survey}${(NOTICE_ON===null?CUR===0:NOTICE_ON)?`<div class="notice">${t("notice")}</div>`:""}${statusCard(n)}${nextPreview(n)}<div class="section-head" id="route-head"><div><span class="route-kicker">${L()?"ROUTE / CHECKPOINTS":"ROUTE / CHECKPOINTS"}</span><h2>${L()?"여정 경로":"Your journey route"}</h2></div><span>${SCHEDULE.length} ${L()?"개 경유지":"stops"}</span></div><ol class="tl">${rows}</ol>${CUR===0?teamSection():yggNotice()}${venueGuide()}${teamOrYggContact()}`}
 
 function dietPicker(){const chips=Object.keys(PRESET).map(k=>`<button class="chip" data-preset="${k}" aria-pressed="${S.presets.has(k)}">${pname(k)}</button>`).join("");
  const EMO={pork:"🐷",beef:"🐮",chicken:"🐔",fish:"🐟",shell:"🦐",anch:"🍲",jeot:"🧂",egg:"🥚",dairy:"🥛",gel:"🍮",alc:"🍶"};
@@ -896,7 +908,7 @@ function dietPicker(){const chips=Object.keys(PRESET).map(k=>`<button class="chi
  <p class="filter-note">${L()?"선택한 재료를 기준으로 메뉴를 정리합니다. 실제 조리법이나 인증 여부를 판정하지는 않습니다.":"This filters listed ingredients. It does not verify recipes or certifications."}</p><h2>${t("ingredients")}</h2><div class="grid">${boxes}</div><button class="btn" id="save">${CUR===1?(L()?"식단 조건 저장":"Save preferences"):t("show")}</button><div style="text-align:center;margin-top:10px"><button class="link" id="any">${t("any")}</button></div>`}
 
 function mealBlock(key){const m=MEALS[key];const g={can:[],check:[],no:[]};m.items.forEach(it=>g[judge(it)].push(it));
- const item=(it,k)=>`<div class="menu"><div class="mn">${nm(it)} <span class="muted small">${nm2(it)}</span></div>${it.ev?`<div class="ev">${tx(it.ev)}</div>`:""}${k==="check"?`<div class="ing">${t("notSure")}${it.unk.filter(i=>S.avoid.has(i)).map(ing).join(", ")}</div>`:(it.has.length?`<div class="ing">${t("contains")}${it.has.map(ing).join(", ")}</div>`:"")}</div>`;
+ const item=(it,k)=>`<div class="menu${S.avoid.size?" m-"+k:""}"><div class="mn">${nm(it)} <span class="muted small">${nm2(it)}</span>${S.avoid.size&&k==="check"?` <span class="tag t-check m-flag">${L()?"확인 필요":"Check"}</span>`:""}${S.avoid.size&&k==="no"?` <span class="tag t-no m-flag">${L()?"못 먹음":"Not for you"}</span>`:""}</div>${it.ev?`<div class="ev">${tx(it.ev)}</div>`:""}${k==="check"?`<div class="ing">${t("notSure")}${it.unk.filter(i=>S.avoid.has(i)).map(ing).join(", ")}</div>`:(it.has.length?`<div class="ing">${t("contains")}${it.has.map(ing).join(", ")}</div>`:"")}</div>`;
  return `<h2 id="meal-${key}">${tx(m.title)}</h2>${S.avoid.size?`<div class="sum">${g.can.length?`<span class="tag t-can">${count(g.can.length,"canN")}</span>`:""}${g.check.length?`<span class="tag t-check">${count(g.check.length,"checkN")}</span>`:""}${g.no.length?`<span class="tag t-no">${count(g.no.length,"noN")}</span>`:""}</div>`:""}
  ${g.can.map(i=>item(i,"can")).join("")}${g.check.length?g.check.map(i=>item(i,"check")).join(""):""}
  ${g.no.length?`<details><summary>${t("notFor")} (${g.no.length})</summary>${g.no.map(i=>item(i,"no")).join("")}</details>`:""}`}
@@ -1250,6 +1262,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)r
    S.searchMode=b.dataset.searchMode;resetOSM();return render()}
  if(b.dataset.radius){const r=Number(b.dataset.radius);if(S.radius===r)return;S.radius=r;resetOSM();return render()}
 
+ if(b.dataset.jump){const t2=document.getElementById(b.dataset.jump);if(t2)t2.scrollIntoView({behavior:"smooth",block:"start"});return}
  if(b.dataset.more){const k=b.dataset.more;const op=b.getAttribute("aria-expanded")!=="true";S.openMap[k]=op;b.setAttribute("aria-expanded",op);b.querySelector("span").textContent=op?t("le"):t("mo");const bd=b.nextElementSibling;if(bd)bd.hidden=!op;return}
  if(b.dataset.base){if(S.base===b.dataset.base)return;clearRoute();setBase(b.dataset.base);S.searchMode="base";resetOSM();return render()}
  if(b.dataset.day!==undefined){S.pickDay=Number(b.dataset.day);S.scrolledNow=false;setBase(S.pickDay===1?"hostel":(nowInfo().day&&nowInfo().m>=mins("17:00")?"hostel":"seongsu"));S.searchMode="base";resetOSM();render();return window.scrollTo(0,0)}
