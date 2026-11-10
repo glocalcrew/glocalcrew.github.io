@@ -121,7 +121,7 @@
 
 <div align="center">
 
-**기획 · 설계** [이름] · 2026
+**기획 · 설계** [JUNGWON SONG] · 2026
 
 지도 데이터 © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
 
